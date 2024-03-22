@@ -1,0 +1,47 @@
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+function App() {
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ['programming'],
+    queryFn: () => fetch('https://v2.jokeapi.dev/joke/Programming').then(res => res.json()),
+  });
+
+  const generateJoke = () => {
+    refetch();
+  };
+
+  return (
+    <div>
+      <button onClick={generateJoke} disabled={isLoading}>
+        {isLoading ? 'Generating Joke...' : 'Generate Joke'}
+      </button>
+      {error && <div>There was an error</div>}
+      {data && (
+        <div>
+          <h4>ID: {data.id}</h4>
+          <h4>Error: {data.error ? 'Yes' : 'No'}</h4>
+          <h4>Category: {data.category}</h4>
+          <h4>Type: {data.type}</h4>
+          <h4>Joke: {data.joke}</h4>
+          <h4>Setup: {data.setup}</h4>
+          <h4>Delivery: {data.delivery}</h4>
+          {/* Displaying flags */}
+          <h4>Flags:</h4>
+          <ul>
+            <li>NSFW: {data.flags.nsfw ? 'Yes' : 'No'}</li>
+            <li>Religious: {data.flags.religious ? 'Yes' : 'No'}</li>
+            <li>Political: {data.flags.political ? 'Yes' : 'No'}</li>
+            <li>Racist: {data.flags.racist ? 'Yes' : 'No'}</li>
+            <li>Sexist: {data.flags.sexist ? 'Yes' : 'No'}</li>
+            <li>Explicit: {data.flags.explicit ? 'Yes' : 'No'}</li>
+          </ul>
+          <h4>Language: {data.lang}</h4>
+          <h4>Safe: {data.safe ? 'True' : 'False'}</h4>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
